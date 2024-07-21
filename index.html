@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="ezelogo (4).png">
+    <link rel="icon" href="logo.png">
     <title>Label Generator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&display=swap');
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #e9ecef;
@@ -27,7 +29,6 @@
             max-width: 450px;
             margin: 20px auto;
         }
-       
         label {
             display: block;
             margin-bottom: 8px;
@@ -122,28 +123,45 @@
                 box-shadow: none;
             }
         }
+        #langButton {
+            width: 5rem;
+            position: absolute;
+            top: 20px;
+           
+            padding: 5px 10px;
+            background-color: #e2454d;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        #langButton:hover {
+            background-color: #509cda;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Label Generator</h1>
-
+    <h1 id="title">Label Generator</h1>
+    <button id="langButton" onclick="toggleLanguage()">KH</button>
     <form id="labelForm">
-        <label for="productName">Product Name:</label>
+        <label for="productName" id="productNameLabel">Product Name:</label>
         <input type="text" id="productName" name="productName" required>
-        <label for="productCode">Product Code:</label>
+        <label for="productCode" id="productCodeLabel">Product Code:</label>
         <input type="text" id="productCode" name="productCode" required>
-        <label for="qty">Quantity:</label>
+        <label for="qty" id="qtyLabel">Quantity:</label>
         <input type="text" id="qty" name="qty" required>
         <button type="button" onclick="generateLabel()">Generate Label</button>
-        <h3>Develop By  <a href="https://belly7788.github.io/KHENGCHETRA/">CHETRA</a></h3>
+        <h3>Developed By <a href="https://belly7788.github.io/KHENGCHETRA/">CHETRA</a></h3>
     </form>
 
     <div id="label" class="label">
-        <h1 id="productNameLabel"></h1>
+        <h1 id="productNameDisplay"></h1>
         <img id="qrCode" src="" alt="QR Code">
-        <B id="productCodeLabel"></B>
-        <h1 id="qtyLabel"></h1>
+        <B id="productCodeDisplay"></B>
+        <h1 id="qtyDisplay"></h1>
     </div>
 
     <div class="button-container">
@@ -161,9 +179,9 @@
                 return;
             }
 
-            document.getElementById('productNameLabel').innerText = productName;
-            document.getElementById('productCodeLabel').innerText = productCode;
-            document.getElementById('qtyLabel').innerText = qty;
+            document.getElementById('productNameDisplay').innerText = productName;
+            document.getElementById('productCodeDisplay').innerText = productCode;
+            document.getElementById('qtyDisplay').innerText = qty;
 
             var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(productCode);
             document.getElementById('qrCode').src = qrCodeUrl;
@@ -179,6 +197,41 @@
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
+        }
+
+        function toggleLanguage() {
+            var currentLang = document.getElementById('langButton').innerText;
+            if (currentLang === 'KH') {
+                document.getElementById('langButton').innerText = 'EN';
+                document.getElementById('title').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productNameLabel').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productCodeLabel').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('qtyLabel').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productNameDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productCodeDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('qtyDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('title').innerText = 'បង្កើតស្លាក';
+                document.getElementById('productNameLabel').innerText = 'ឈ្មោះផលិតផល:';
+                document.getElementById('productCodeLabel').innerText = 'លេខកូដផលិតផល:';
+                document.getElementById('qtyLabel').innerText = 'ចំនួន:';
+                document.querySelector('button[onclick="generateLabel()"]').innerText = 'បង្កើតស្លាក';
+                document.getElementById('printButton').innerText = 'បោះពុម្ព';
+            } else {
+                document.getElementById('langButton').innerText = 'KH';
+                document.getElementById('title').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productNameLabel').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productCodeLabel').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('qtyLabel').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productNameDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productCodeDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('qtyDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('title').innerText = 'Label Generator';
+                document.getElementById('productNameLabel').innerText = 'Product Name:';
+                document.getElementById('productCodeLabel').innerText = 'Product Code:';
+                document.getElementById('qtyLabel').innerText = 'Quantity:';
+                document.querySelector('button[onclick="generateLabel()"]').innerText = 'Generate Label';
+                document.getElementById('printButton').innerText = 'Print';
+            }
         }
     </script>
 
