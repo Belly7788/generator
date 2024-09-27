@@ -76,7 +76,7 @@
             font-size: 30px;
         }
         .label img {
-            width: 150px;
+            width: 250px;
             height: 150px;
             display: block;
             margin: auto;
@@ -173,22 +173,24 @@
             var productName = document.getElementById('productName').value.trim();
             var productCode = document.getElementById('productCode').value.trim();
             var qty = document.getElementById('qty').value.trim();
-
+                
             if (productName === '' || productCode === '' || qty === '') {
                 alert('Please Input Data.');
                 return;
             }
-
+        
             document.getElementById('productNameDisplay').innerText = productName;
-            document.getElementById('productCodeDisplay').innerText = productCode;
+            // document.getElementById('productCodeDisplay').innerText = productCode;
             document.getElementById('qtyDisplay').innerText = qty;
-
-            var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(productCode);
-            document.getElementById('qrCode').src = qrCodeUrl;
-
+        
+            // Use a barcode generation API
+            var barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' + encodeURIComponent(productCode) + '&code=Code128&translate-esc=off';
+            document.getElementById('qrCode').src = barcodeUrl;
+        
             document.getElementById('label').style.display = 'block';
             document.getElementById('printButton').style.display = 'block';
         }
+
 
         function printLabel() {
             var printContents = document.getElementById('label').outerHTML;
