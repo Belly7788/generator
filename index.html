@@ -11,10 +11,23 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e9ecef;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b, #86a8e7, #91eae4, #ff6a88, #d4a5a5, #ff9a9e);
             color: #495057;
             margin: 0;
             padding: 20px;
+            background-size: 400% 400%; /* Increase the size of the background */
+            animation: gradientAnimation 15s ease infinite; /* Apply the animation */
+        }
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%; /* Start position */
+            }
+            50% {
+                background-position: 100% 50%; /* Mid position */
+            }
+            100% {
+                background-position: 0% 50%; /* End position */
+            }
         }
         h1 {
             text-align: center;
