@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="logo.png">
     <title>Label Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700&display=swap');
         
@@ -15,18 +16,18 @@
             color: #495057;
             margin: 0;
             padding: 20px;
-            background-size: 400% 400%; /* Increase the size of the background */
-            animation: gradientAnimation 15s ease infinite; /* Apply the animation */
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
         }
         @keyframes gradientAnimation {
             0% {
-                background-position: 0% 50%; /* Start position */
+                background-position: 0% 50%;
             }
             50% {
-                background-position: 100% 50%; /* Mid position */
+                background-position: 100% 50%;
             }
             100% {
-                background-position: 0% 50%; /* End position */
+                background-position: 0% 50%;
             }
         }
         h1 {
@@ -88,10 +89,10 @@
             font-size: 30px;
         }
         .label img {
-            width: 190px;
-            height: 190px;
+            width: 300px;
+            height: 150px;
             display: block;
-            margin: auto;
+            margin: 10px auto;
         }
         .label B {
             color: black;
@@ -139,7 +140,6 @@
             width: 5rem;
             position: absolute;
             top: 20px;
-           
             padding: 5px 10px;
             background-color: #e2454d;
             color: #ffffff;
@@ -157,7 +157,7 @@
 <body>
 
     <h1 id="title">Label Generator</h1>
-    <button id="langButton" onclick="toggleLanguage()">KH</button>
+    <button id="langButton" onclick="-tLanguage()">KH</button>
     <form id="labelForm">
         <label for="productName" id="productNameLabel">Product Name:</label>
         <input type="text" id="productName" name="productName" required>
@@ -171,7 +171,7 @@
 
     <div id="label" class="label">
         <h1 id="productNameDisplay"></h1>
-        <img id="qrCode" src="" alt="QR Code">
+        <img id="barcode" src="" alt="Barcode">
         <B id="productCodeDisplay"></B>
         <h1 id="qtyDisplay"></h1>
     </div>
@@ -192,12 +192,16 @@
             }
         
             document.getElementById('productNameDisplay').innerText = productName;
-            document.getElementById('productCodeDisplay').innerText = productCode; // Fixed: Display product code
+            document.getElementById('productCodeDisplay').innerText = productCode;
             document.getElementById('qtyDisplay').innerText = qty;
         
-            // Use QR code generation API (goqr.me)
-            var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(productCode);
-            document.getElementById('qrCode').src = qrCodeUrl;
+            // Generate barcode using JsBarcode
+            JsBarcode("#barcode", productCode, {
+                format: "CODE128",
+                width: 2,
+                height: 80,
+                displayValue: false
+            });
         
             document.getElementById('label').style.display = 'block';
             document.getElementById('printButton').style.display = 'block';
