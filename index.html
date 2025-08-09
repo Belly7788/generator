@@ -20,20 +20,44 @@
             animation: gradientAnimation 15s ease infinite;
         }
         @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         h1 {
             text-align: center;
             color: #343a40;
             margin-bottom: 20px;
+        }
+        .tab-container {
+            max-width: 450px;
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        .tab.active {
+            background-color: #ff8800;
+            color: #ffffff;
+            border-bottom: none;
+        }
+        .tab:hover {
+            background-color: #ff8800;
+            color: #ffffff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
         }
         form {
             background-color: #ffffff;
@@ -41,7 +65,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 450px;
-            margin: 20px auto;
+            margin: 0 auto;
         }
         label {
             display: block;
@@ -83,7 +107,7 @@
             text-align: center;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 0 auto;
+            margin: 20px auto;
         }
         .label h1 {
             font-size: 30px;
@@ -98,12 +122,14 @@
             color: black;
             font-size: 25px;
             margin: 5px 0;
+            display: block;
         }
         .button-container {
-            text-align: center;
+            display: flex;
+            justify-content: center;
             margin-top: 20px;
         }
-        #printButton {
+        #printButton, #printButtonNoBarcode {
             display: none;
             width: 15%;
             padding: 12px;
@@ -115,7 +141,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        #printButton:hover {
+        #printButton:hover, #printButtonNoBarcode:hover {
             background-color: #218838;
         }
         @media print {
@@ -152,35 +178,82 @@
         #langButton:hover {
             background-color: #509cda;
         }
+        #codeLiveDisplay {
+            font-size: 100px;
+            color: #000000;
+            margin-top: 0px;
+        }
+        #productNameDisplayNoBarcode {
+            font-size: 20px;
+            margin-top: 60px;
+            margin-bottom: 50px;
+        }
     </style>
 </head>
 <body>
-
     <h1 id="title">Label Generator</h1>
-    <button id="langButton" onclick="-tLanguage()">KH</button>
-    <form id="labelForm">
-        <label for="productName" id="productNameLabel">Product Name:</label>
-        <input type="text" id="productName" name="productName" required>
-        <label for="productCode" id="productCodeLabel">Product Code:</label>
-        <input type="text" id="productCode" name="productCode" required>
-        <label for="qty" id="qtyLabel">Quantity:</label>
-        <input type="text" id="qty" name="qty" required>
-        <button type="button" onclick="generateLabel()">Generate Label</button>
-        <h3>Developed By <a href="https://belly7788.github.io/KHENGCHETRA/">CHETRA</a></h3>
-    </form>
+    <button id="langButton" onclick="toggleLanguage()">KH</button>
 
-    <div id="label" class="label">
-        <h1 id="productNameDisplay"></h1>
-        <img id="barcode" src="" alt="Barcode">
-        <B id="productCodeDisplay"></B>
-        <h1 id="qtyDisplay"></h1>
+    <div class="tab-container">
+        <div class="tab active" onclick="showTab('barcode')">Barcode</div>
+        <div class="tab" onclick="showTab('noBarcode')">No Barcode</div>
     </div>
 
-    <div class="button-container">
-        <button id="printButton" onclick="printLabel()">Print</button>
+    <div id="barcode" class="tab-content active">
+        <form id="labelForm">
+            <label for="productName" id="productNameLabel">Product Name:</label>
+            <input type="text" id="productName" name="productName" required>
+            <label for="productCode" id="productCodeLabel">Product Code:</label>
+            <input type="text" id="productCode" name="productCode" required>
+            <label for="qty" id="qtyLabel">Quantity:</label>
+            <input type="text" id="qty" name="qty" required>
+            <button type="button" onclick="generateLabel()">Generate Label</button>
+            <h3>Developed By <a href="https://belly7788.github.io/KHENGCHETRA/">CHETRA</a></h3>
+        </form>
+
+        <div id="label" class="label">
+            <h1 id="productNameDisplay"></h1>
+            <img id="barcodeImg" src="" alt="Barcode">
+            <B id="productCodeDisplay"></B>
+            <h1 id="qtyDisplay"></h1>
+        </div>
+
+        <div class="button-container">
+            <button id="printButton" onclick="printLabel()">Print</button>
+        </div>
+    </div>
+
+    <div id="noBarcode" class="tab-content">
+        <form id="labelFormNoBarcode">
+            <label for="codeLive" id="codeLiveLabel">Code Live:</label>
+            <input type="text" id="codeLive" name="codeLive" required>
+            <label for="productNameNoBarcode" id="productNameLabelNoBarcode">Product Name:</label>
+            <input type="text" id="productNameNoBarcode" name="productNameNoBarcode" required>
+            <label for="productCodeNoBarcode" id="productCodeLabelNoBarcode">Product Code:</label>
+            <input type="text" id="productCodeNoBarcode" name="productCodeNoBarcode" required>
+            <button type="button" onclick="generateLabelNoBarcode()">Generate Label</button>
+            <h3>Developed By <a href="https://belly7788.github.io/KHENGCHETRA/">CHETRA</a></h3>
+        </form>
+
+        <div id="labelNoBarcode" class="label">
+            <h1 id="codeLiveDisplay"></h1>
+            <B id="productNameDisplayNoBarcode"></B>
+            <B id="productCodeDisplayNoBarcode"></B>
+        </div>
+
+        <div class="button-container">
+            <button id="printButtonNoBarcode" onclick="printLabelNoBarcode()">Print</button>
+        </div>
     </div>
 
     <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
         function generateLabel() {
             var productName = document.getElementById('productName').value.trim();
             var productCode = document.getElementById('productCode').value.trim();
@@ -195,8 +268,7 @@
             document.getElementById('productCodeDisplay').innerText = productCode;
             document.getElementById('qtyDisplay').innerText = qty;
         
-            // Generate barcode using JsBarcode
-            JsBarcode("#barcode", productCode, {
+            JsBarcode("#barcodeImg", productCode, {
                 format: "CODE128",
                 width: 2,
                 height: 80,
@@ -207,10 +279,35 @@
             document.getElementById('printButton').style.display = 'block';
         }
 
+        function generateLabelNoBarcode() {
+            var codeLive = document.getElementById('codeLive').value.trim();
+            var productName = document.getElementById('productNameNoBarcode').value.trim();
+            var productCode = document.getElementById('productCodeNoBarcode').value.trim();
+                
+            if (codeLive === '' || productName === '' || productCode === '') {
+                alert('Please Input Data.');
+                return;
+            }
+        
+            document.getElementById('codeLiveDisplay').innerText = codeLive;
+            document.getElementById('productNameDisplayNoBarcode').innerText = productName;
+            document.getElementById('productCodeDisplayNoBarcode').innerText = productCode;
+        
+            document.getElementById('labelNoBarcode').style.display = 'block';
+            document.getElementById('printButtonNoBarcode').style.display = 'block';
+        }
+
         function printLabel() {
             var printContents = document.getElementById('label').outerHTML;
             var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
 
+        function printLabelNoBarcode() {
+            var printContents = document.getElementById('labelNoBarcode').outerHTML;
+            var originalContents = document.body.innerHTML;
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
@@ -227,12 +324,23 @@
                 document.getElementById('productNameDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
                 document.getElementById('productCodeDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
                 document.getElementById('qtyDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('codeLiveLabel').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productNameLabelNoBarcode').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productCodeLabelNoBarcode').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('codeLiveDisplay').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productNameDisplayNoBarcode').style.fontFamily = "'Noto Sans Khmer', sans-serif";
+                document.getElementById('productCodeDisplayNoBarcode').style.fontFamily = "'Noto Sans Khmer', sans-serif";
                 document.getElementById('title').innerText = 'បង្កើតស្លាក';
                 document.getElementById('productNameLabel').innerText = 'ឈ្មោះផលិតផល:';
                 document.getElementById('productCodeLabel').innerText = 'លេខកូដផលិតផល:';
                 document.getElementById('qtyLabel').innerText = 'ចំនួន:';
+                document.getElementById('codeLiveLabel').innerText = 'កូដសកម្ម:';
+                document.getElementById('productNameLabelNoBarcode').innerText = 'ឈ្មោះផលិតផល:';
+                document.getElementById('productCodeLabelNoBarcode').innerText = 'លេខកូដផលិតផល:';
                 document.querySelector('button[onclick="generateLabel()"]').innerText = 'បង្កើតស្លាក';
+                document.querySelector('button[onclick="generateLabelNoBarcode()"]').innerText = 'បង្កើតស្លាក';
                 document.getElementById('printButton').innerText = 'បោះពុម្ព';
+                document.getElementById('printButtonNoBarcode').innerText = 'បោះពុម្ព';
             } else {
                 document.getElementById('langButton').innerText = 'KH';
                 document.getElementById('title').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
@@ -242,15 +350,25 @@
                 document.getElementById('productNameDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
                 document.getElementById('productCodeDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
                 document.getElementById('qtyDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('codeLiveLabel').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productNameLabelNoBarcode').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productCodeLabelNoBarcode').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('codeLiveDisplay').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productNameDisplayNoBarcode').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                document.getElementById('productCodeDisplayNoBarcode').style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
                 document.getElementById('title').innerText = 'Label Generator';
                 document.getElementById('productNameLabel').innerText = 'Product Name:';
                 document.getElementById('productCodeLabel').innerText = 'Product Code:';
                 document.getElementById('qtyLabel').innerText = 'Quantity:';
+                document.getElementById('codeLiveLabel').innerText = 'Code Live:';
+                document.getElementById('productNameLabelNoBarcode').innerText = 'Product Name:';
+                document.getElementById('productCodeLabelNoBarcode').innerText = 'Product Code:';
                 document.querySelector('button[onclick="generateLabel()"]').innerText = 'Generate Label';
+                document.querySelector('button[onclick="generateLabelNoBarcode()"]').innerText = 'Generate Label';
                 document.getElementById('printButton').innerText = 'Print';
+                document.getElementById('printButtonNoBarcode').innerText = 'Print';
             }
         }
     </script>
-
 </body>
 </html>
